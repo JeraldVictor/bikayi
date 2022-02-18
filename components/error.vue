@@ -9,7 +9,7 @@
         {{ ERROR.message }}
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" text block @click="DISMIS_ERROR"> OK </v-btn>
+        <v-btn color="primary" text block @click="DISMISS_ERROR"> OK </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -22,7 +22,7 @@ export default {
     ...mapGetters(['ISERROR', 'ERROR']),
   },
   methods: {
-    ...mapMutations(['DISMIS_ERROR']),
+    ...mapMutations(['DISMISS_ERROR']),
   },
 }
 </script>
