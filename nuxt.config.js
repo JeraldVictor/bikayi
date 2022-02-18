@@ -44,7 +44,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: 'http://api.nobelprize.org/v1/prize.json',
+    baseURL: 'https://api.nobelprize.org/v1/prize.json',
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

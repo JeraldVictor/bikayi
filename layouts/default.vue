@@ -3,6 +3,7 @@
     <Error />
     <Loading />
     <v-main>
+      <Header />
       <v-container>
         <nuxt />
       </v-container>

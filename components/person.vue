@@ -1,7 +1,7 @@
 <template>
   <v-card elevation="16" class="mx-auto" max-width="344">
     <v-card-text>
-      <div class="primary--text font-weight-bold">
+      <div class="primary--text font-weight-bold text-capitalize">
         {{ `${person.surname}, ${person.firstname}` }}
       </div>
       <div class="d-flex justify-space-between">
