@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="16" class="mx-auto" max-width="344">
+  <v-card elevation="16" class="mx-auto" min-width="250" max-width="344">
     <v-card-text>
       <div class="primary--text font-weight-bold text-capitalize">
         {{ `${person[0].surname}, ${person[0].firstname}` }}

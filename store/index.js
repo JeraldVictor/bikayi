@@ -3,6 +3,55 @@ const asyncForEach = async (array, callback) => {
     await callback(array[index], index, array)
   }
 }
+
+const format_data = async (data) => {
+  let years = new Set()
+  let categories = new Set()
+  let prices = []
+  await Promise.all(
+    data.map(async (item) => {
+      if (Number(item.year) >= 1900 && Number(item.year) <= 2018) {
+        years.add(item.year)
+      }
+      categories.add(item.category)
+      if (item.laureates) {
+        await asyncForEach(item.laureates, (people) => {
+          prices.push({
+            category: item.category,
+            year: item.year,
+            ...people,
+          })
+        })
+      }
+      return item
+    })
+  )
+  return {
+    years: Array.from(years),
+    categories: Array.from(categories),
+    prices,
+  }
+}
+
+const paginator = (items, current_page, per_page_items) => {
+  let page = current_page || 1,
+    per_page = per_page_items || 10,
+    offset = (page - 1) * per_page,
+    paginatedItems = items.slice(offset).slice(0, per_page_items),
+    total_pages = Math.ceil(items.length / per_page)
+
+  return {
+    current_page,
+    page: page,
+    per_page: per_page,
+    pre_page: page - 1 ? page - 1 : null,
+    next_page: total_pages > page ? page + 1 : null,
+    total: items.length,
+    total_pages: total_pages,
+    data: paginatedItems,
+  }
+}
+
 export const state = () => ({
   isLoading: false,
   error: {
@@ -15,6 +64,10 @@ export const state = () => ({
   years: [],
   categories: [],
   more_than_once: [],
+  paginated_price: {
+    data: [],
+  },
+  per_page_items: 12,
 })
 export const mutations = {
   SET_DRAWER(super_state, data) {
@@ -43,9 +96,11 @@ export const mutations = {
   SET_ALL_DATA(super_state, data) {
     super_state.all_price = data
     super_state.display_price = data
+    super_state.paginated_price = paginator(data, 1, 12)
   },
   SET_FILTER_DATA(super_state, data) {
     super_state.display_price = data
+    super_state.paginated_price = paginator(data, 1, 12)
   },
   SET_FILTERS(super_state, { years, categories }) {
     super_state.years = years
@@ -53,6 +108,13 @@ export const mutations = {
   },
   SET_MORE_THAN_ONCE(super_state, data) {
     super_state.more_than_once = data
+  },
+  SET_PAGINATION(super_state, current_page) {
+    super_state.paginated_price = paginator(
+      super_state.display_price,
+      current_page,
+      super_state.per_page_items
+    )
   },
 }
 
@@ -63,6 +125,7 @@ export const getters = {
   ERROR: (super_state) => super_state.error,
   ALL_PRICE: (super_state) => super_state.all_price,
   DISPLAY_PRICE: (super_state) => super_state.display_price,
+  PAGINATED_PRICE: (super_state) => super_state.paginated_price,
   ALL_YEARS: (super_state) => super_state.years,
   ALL_CATEGORY: (super_state) => super_state.categories,
   MORE_THAN: (super_state) => super_state.more_than_once,
@@ -76,22 +139,11 @@ export const actions = {
         url: '',
       })
       await commit('SET_LOADING', true)
-      await commit('SET_ALL_DATA', data.prizes)
-
-      let years = new Set()
-      let categories = new Set()
-      await Promise.all(
-        data.prizes.map((item) => {
-          if (Number(item.year) >= 1900 && Number(item.year) <= 2018) {
-            years.add(item.year)
-          }
-          categories.add(item.category)
-          return item
-        })
-      )
+      let { years, categories, prices } = await format_data(data.prizes)
+      await commit('SET_ALL_DATA', prices)
       commit('SET_FILTERS', {
-        years: Array.from(years),
-        categories: Array.from(categories),
+        years,
+        categories,
       })
     } catch (error) {
       await commit('SET_ERROR', { message: error.message })

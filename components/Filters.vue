@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col>
+      <v-col lg="5">
         <v-autocomplete
           label="Category"
           clearable
@@ -9,8 +9,8 @@
           multiple
           small-chips
           :items="ALL_CATEGORY"
-          single-line
           v-model="selected_category"
+          full-width
         >
           <template v-slot:selection="data">
             <v-chip
@@ -37,15 +37,15 @@
           </template>
         </v-autocomplete>
       </v-col>
-      <v-col>
+      <v-col lg="5">
         <v-autocomplete
           label="Year(s)"
+          full-width
           clearable
           deletable-chips
           multiple
           small-chips
           :items="ALL_YEARS"
-          single-line
           v-model="selected_years"
         >
           <template v-slot:selection="data">
@@ -73,7 +73,7 @@
           </template>
         </v-autocomplete>
       </v-col>
-      <v-col>
+      <v-col lg="2" sm="12" md="12">
         <v-btn
           block
           rounded
@@ -84,11 +84,23 @@
         >
       </v-col>
     </v-row>
-    <div class="text-right">
-      <v-btn text color="primary" @click="clearFilter">
-        <v-icon>mdi mdi-close</v-icon> Clear Filter</v-btn
-      >
-    </div>
+    <v-row>
+      <v-col>
+        <div class="text-left overline">
+          Total Prize:
+          <span class="primary--text" style="font-size: 20px">
+            {{ PAGINATED_PRICE.total }}
+          </span>
+        </div>
+      </v-col>
+      <v-col>
+        <div class="text-right">
+          <v-btn text color="primary" @click="clearFilter">
+            <v-icon>mdi mdi-close</v-icon> Clear Filter</v-btn
+          >
+        </div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -97,14 +109,12 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   data() {
     return {
-      category: ['chemistry', 'economics', 'peace', 'lecture'],
-      years: ['2021', '2020'],
       selected_category: [],
       selected_years: [],
     }
   },
   computed: {
-    ...mapGetters(['ALL_YEARS', 'ALL_CATEGORY']),
+    ...mapGetters(['ALL_YEARS', 'ALL_CATEGORY', 'PAGINATED_PRICE']),
   },
   methods: {
     ...mapActions(['FILTER_DATA', 'CLEAR_FILTER']),
