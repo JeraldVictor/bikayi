@@ -10,6 +10,7 @@
       />
     </p>
     <div>
+      <Filters />
       <PersonList />
     </div>
   </v-container>

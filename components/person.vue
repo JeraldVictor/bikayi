@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="accent--text text-capitalize">
-        {{ person.motivation.replace('"', '') }}
+        {{ person.motivation | trimSentence }}
       </div>
     </v-card-text>
   </v-card>
@@ -31,6 +31,17 @@ export default {
     category: {
       type: String,
       required: true,
+    },
+  },
+  filters: {
+    trimSentence(value) {
+      let str = value
+      str = str.replace(/\"/g, '')
+      return (
+        str
+          .substr(0, 50)
+          .substr(0, Math.min(str.length, str.lastIndexOf(' '))) + '...'
+      )
     },
   },
 }
