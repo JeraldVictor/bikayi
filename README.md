@@ -2,7 +2,7 @@
 
 ## _Noble Prize Winners_
 
-### [Live Link](https://bikayi.jeraldvictor.co.in)
+### [Live Link](https://jeraldvictor.github.io/bikayi/)
 
 Application is developed using
 
